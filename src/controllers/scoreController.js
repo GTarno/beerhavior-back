@@ -24,5 +24,5 @@ module.exports = {
     async index (request, response){
         const score = await connection('score').select('*');
         return response.json(score);
-    }
+    }   
 }

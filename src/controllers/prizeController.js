@@ -16,5 +16,28 @@ module.exports = {
     async index (request, response){
         const prizes = await connection('prizesTable').select('*');
         return response.json(prizes);
+    },
+    async update (request, response){
+        const {idPrize, namePrize, costPrize, availabilityPrize, stockPrize} = request.body;
+        await connection('prizesTable')
+            .where({
+                idPrize: idPrize
+            })
+            .update({
+                namePrize: namePrize,
+                costPrize: costPrize,
+                availabilityPrize: availabilityPrize,
+                stockPrize: stockPrize
+            });
+            return response.status(200).json({success: 'Prize updated'});
+    },
+    async delete (request, response){
+        const {idPrize} = request.params;
+        await connection('prizesTable')
+            .where({
+                idPrize: idPrize
+            })
+            .delete();
+            return response.status(204).send();
     }
 }
