@@ -53,6 +53,7 @@ module.exports = {
             project: idProject
         })
         .select('*')
+        .first();
         if (project){
             await connection('project')
             .where({
@@ -70,18 +71,25 @@ module.exports = {
         }
     },
     async delete (request, response){
-        const {idProject} = request.params;
+        const {id} = request.params;
         const idAdmin = request.headers.authorization;
         const project = await connection('adminProject')
         .where({
             admin: idAdmin,
-            project: idProject
+            project: id
         })
         .select('*')
+        .first();
+        console.log(project)
         if (project){
             await connection('project')
             .where({
-                idProject: idProject
+                idProject: id
+            })
+            .delete();
+            await connection('adminProject')
+            .where({
+                project: id
             })
             .delete();
             return response.status(204).send();

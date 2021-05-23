@@ -8,15 +8,27 @@ module.exports = {
         const collaborator = request.headers.authorization;
 
         const selectedPrize = await connection('prizesTable')
-        .select({
-            stockPrize
-        })
+        .select('stockPrize')
         .where({
             idPrize: prize
-        });
-        
-        if (prizeQuantityVoucher <= selectedPrize){
-            const updatePrize = prize - prizeQuantityVoucher
+        })
+        .first();
+
+        const collaboratorScore = await connection('usersCollaborator')
+        .select('totalScoreCollaborator')
+        .where({
+            idCollaborator: collaborator
+        })
+        .first();
+        console.log(collaboratorScore.totalScoreCollaborator)
+        console.log(costVoucher)
+        console.log(selectedPrize.stockPrize)
+        console.log(collaboratorScore.totalScoreCollaborator)
+        console.log(prizeQuantityVoucher)
+        console.log(prizeQuantityVoucher <= selectedPrize.stockPrize)
+        if (collaboratorScore.totalScoreCollaborator >= costVoucher && prizeQuantityVoucher <= selectedPrize.stockPrize){
+            const updatePrize = selectedPrize.stockPrize - prizeQuantityVoucher
+            console.log(updatePrize)
             await connection('prizesTable')
             .where({
                 idPrize: prize
@@ -33,7 +45,22 @@ module.exports = {
                 prize,
                 collaborator
             });
-            this.getNewScore (collaborator, costVoucher)
+            const totalScore = await connection('usersCollaborator')
+            .select('totalScoreCollaborator')
+            .where({
+                idCollaborator: collaborator
+            })
+            .first();
+            console.log(totalScore.totalScoreCollaborator)
+            const newScore = totalScore.totalScoreCollaborator - costVoucher;
+            await connection('usersCollaborator')
+            .where({
+                idCollaborator: collaborator
+            })
+            .update({
+                totalScoreCollaborator: newScore
+            })
+
             return response.json({voucher});
     }
         else{
@@ -44,32 +71,15 @@ module.exports = {
         const vouchers = await connection('voucher').select('*');
         return response.json(vouchers);
     },
-    async getNewScore (user, score){
-        const totalScore = await connection('usersCollaborator')
-        .select('totalScoreCollaborator')
-        .where({
-            userCollaborator: user
-        });
-        const newScore = totalScore - score;
-        this.updateScore(newScore, user);
-    },
-    async updateScore (score, user) {
-        await connection('usersCollaborator')
-        .where({
-            userCollaborator: user
-        })
-        .update({
-            totalScoreCollaborator: score
-        })
-    },
     async useVoucher (request, response){
         const {voucher} = request.body;
         const voucherAvailability = await connection('voucher')
         .select('availableVoucher')
         .where({
             voucher: voucher
-        });
-        if (voucherAvailability === 0) {
+        })
+        .first();
+        if (voucherAvailability.availableVoucher == 0) {
             return response.status(400).json({ error: 'Voucher unavailable' });
         }
         else{

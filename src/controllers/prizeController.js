@@ -32,10 +32,10 @@ module.exports = {
             return response.status(200).json({success: 'Prize updated'});
     },
     async delete (request, response){
-        const {idPrize} = request.params;
+        const {id} = request.params;
         await connection('prizesTable')
             .where({
-                idPrize: idPrize
+                idPrize: id
             })
             .delete();
             return response.status(204).send();

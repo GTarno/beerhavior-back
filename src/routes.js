@@ -12,60 +12,60 @@ const consultScoreController = require('./controllers/consultScoreController')
 const pendencyController = require('./controllers/pendencyController')
 
 // Admin's APIs
-routes.post('/admin', adminController.create);
-routes.get('/admin', adminController.index);
-routes.post('/admin/edit', adminController.update);
-routes.delete('/admin/:id', adminController.delete);
+routes.post('/admin', adminController.create); //testado
+routes.get('/admin', adminController.index); //testado
+routes.post('/admin/edit', adminController.update); //testado
+routes.delete('/admin/:id', adminController.delete); //testado
 
 // Collaborator's APIs
-routes.post('/collaborator', collaboratorsController.create);
-routes.get('/collaborator', collaboratorsController.index);
-routes.post('/collaborator/edit', collaboratorsController.update);
-routes.delete('/collaborator/:id', collaboratorsController.delete);
+routes.post('/collaborator', collaboratorsController.create); //testado
+routes.get('/collaborator', collaboratorsController.index); //testado
+routes.post('/collaborator/edit', collaboratorsController.update); //testado
+routes.delete('/collaborator/:id', collaboratorsController.delete); //testado
 
 // Score Value's APIs
-routes.post('/score-value', scoreValueController.create);
-routes.get('/score-value', scoreValueController.index);
+routes.post('/score-value', scoreValueController.create); //testado
+routes.get('/score-value', scoreValueController.index); //testado
 
 // Prize's APIs
-routes.post('/prize', prizeController.create);
-routes.get('/prize', prizeController.index);
-routes.post('/prize/edit', prizeController.update);
-routes.post('/prize/:id', prizeController.delete);
+routes.post('/prize', prizeController.create); //testado
+routes.get('/prize', prizeController.index); //testado
+routes.post('/prize/edit', prizeController.update); //testado
+routes.delete('/prize/:id', prizeController.delete); //testado
 
 // Voucher's APIs
-routes.post('/voucher', voucherController.create);
-routes.get('/voucher', voucherController.index);
-routes.post('/voucher', voucherController.useVoucher)
+routes.post('/voucher', voucherController.create); //testado
+routes.get('/voucher', voucherController.index); //testado
+routes.post('/voucher/use-voucher', voucherController.useVoucher) //testado
 
 // Score's APIs
-routes.post('/score', scoreController.create);
-routes.get('/score', scoreController.index);
+routes.post('/score', scoreController.create); //testado
+routes.get('/score', scoreController.index); //testado
 
 // Project's APIs
-routes.post('/project', projectController.create);
-routes.get('/project', projectController.index);
-routes.post('/project/associate', projectController.associate);
-routes.get('/project/associate', projectController.association);
-routes.post('/project/consultProject', projectController.consultAdminsProject);
-routes.post('/project/consultAdmin', projectController.consultProjectAdmin);
-routes.post('/project/edit', projectController.update);
-routes.delete('/project/:id', projectController.delete);
+routes.post('/project', projectController.create); //testado
+routes.get('/project', projectController.index); //testado
+routes.post('/project/associate', projectController.associate); //testado
+routes.get('/project/associate', projectController.association); //testado
+routes.post('/project/consultProject', projectController.consultAdminsProject); //testado
+routes.post('/project/consultAdmin', projectController.consultProjectAdmin); //testado
+routes.post('/project/edit', projectController.update); //testado
+routes.delete('/project/:id', projectController.delete); //testado
 
 // Login API
-routes.post('/session/admin', sessionController.loginAdmin);
-routes.post('/session/collaborator', sessionController.loginCollaborator);
+routes.post('/session/admin', sessionController.loginAdmin); //testado
+routes.post('/session/collaborator', sessionController.loginCollaborator); //testado
 
 // Dashboard's APIs
-routes.post('/dashboard/project', consultScoreController.consultCollaboratorScore);
-routes.post('/dashboard/collaborator', consultScoreController.consultProjectScore);
+routes.post('/dashboard/collaborator', consultScoreController.consultCollaboratorScore); //testado
+routes.post('/dashboard/project', consultScoreController.consultProjectScore); //testado
 
 // Pendency's APIs
-routes.get('/pendency/user', pendencyController.consultUserPendency);
-routes.post('/pendency/approve-user', pendencyController.approveUserPendency);
-routes.post('/pendency/decline-user', pendencyController.declineUserPendency);
-routes.get('/pendency/commit', pendencyController.consultCommitPendency);
-routes.post('/pendency/approve-commit', pendencyController.approveCommitPendency);
-routes.post('/pendency/decline-commit', pendencyController.declineCommitPendency);
+routes.get('/pendency/user', pendencyController.consultUserPendency); //testado
+routes.post('/pendency/approve-user', pendencyController.approveUserPendency); //testado
+routes.post('/pendency/decline-user', pendencyController.declineUserPendency); //testado
+routes.get('/pendency/commit', pendencyController.consultCommitPendency); //testado
+routes.post('/pendency/approve-commit', pendencyController.approveCommitPendency); //testado
+routes.post('/pendency/decline-commit', pendencyController.declineCommitPendency); //testado
 
 module.exports = routes;

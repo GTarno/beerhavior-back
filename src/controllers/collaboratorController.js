@@ -37,12 +37,12 @@ module.exports = {
         return response.status(200).json({success: 'User updated'});
     },
     async delete (request, response){
-        const {idCollaborator} = request.params;
+        const {id} = request.params;
         const logged = request.headers.authorization;
-        if(idCollaborator === logged){
+        if(id == logged){
             await connection('usersCollaborator')
             .where({
-                idCollaborator: idCollaborator
+                idCollaborator: id
             })
             .delete();
             return response.status(204).send();
