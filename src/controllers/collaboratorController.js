@@ -12,7 +12,13 @@ module.exports = {
             emailCollaborator,
             passwordCollaborator,
             techLeaderCollaborator
-        });
+        })        
+        .catch(function (e) {
+            console.log(e)
+            if (e.code){
+                return response.status(401).json({error: 'Sorry, user or email already exists.'})
+            }
+          });
 
         return response.json({idCollaborator});
     },

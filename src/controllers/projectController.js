@@ -7,8 +7,13 @@ module.exports = {
             nameProject,
             codProject,
             linkGitProject
-        });
-
+        })
+        .catch(function (e) {
+            console.log(e)
+            if (e.code){
+                return response.status(401).json({error: 'Sorry, project code already exists.'})
+            }
+          })
         return response.json({id});
     },
     async index (request, response){
