@@ -36,6 +36,7 @@ routes.delete('/prize/:id', prizeController.delete); //testado
 // Voucher's APIs
 routes.post('/voucher', voucherController.create); //testado
 routes.get('/voucher', voucherController.index); //testado
+routes.post('/voucher/get-by-user', voucherController.getVoucherByUser); //testado
 routes.post('/voucher/use-voucher', voucherController.useVoucher) //testado
 
 // Score's APIs
