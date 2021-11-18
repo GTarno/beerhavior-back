@@ -14,7 +14,6 @@ module.exports = {
             techLeaderCollaborator
         })        
         .catch(function (e) {
-            console.log(e)
             if (e.code){
                 return response.status(401).json({error: 'Sorry, user or email already exists.'})
             }
@@ -56,5 +55,12 @@ module.exports = {
         else{
             return response.status(401).json({error: 'Operation not permitted.'});
         }
+    },
+    async profile (request, response){
+        const user = request.query.user;
+        console.log(user);
+        const collaborators = await connection('usersCollaborator').select('*').where({ idCollaborator: user}).first();
+        console.log(collaborators)
+        return response.json(collaborators);
     }
 }

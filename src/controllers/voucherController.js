@@ -26,18 +26,11 @@ module.exports = {
         idCollaborator: collaborator,
       })
       .first();
-    console.log(collaboratorScore.totalScoreCollaborator);
-    console.log(costVoucher);
-    console.log(selectedPrize.stockPrize);
-    console.log(collaboratorScore.totalScoreCollaborator);
-    console.log(prizeQuantityVoucher);
-    console.log(prizeQuantityVoucher <= selectedPrize.stockPrize);
     if (
       collaboratorScore.totalScoreCollaborator >= costVoucher &&
       prizeQuantityVoucher <= selectedPrize.stockPrize
     ) {
       const updatePrize = selectedPrize.stockPrize - prizeQuantityVoucher;
-      console.log(updatePrize);
       await connection("prizesTable")
         .where({
           idPrize: prize,
@@ -60,7 +53,6 @@ module.exports = {
           idCollaborator: collaborator,
         })
         .first();
-      console.log(totalScore.totalScoreCollaborator);
       const newScore = totalScore.totalScoreCollaborator - costVoucher;
       await connection("usersCollaborator")
         .where({
@@ -84,8 +76,6 @@ module.exports = {
 
   async getVoucherByUser(request, response) {
     const {collaborator} = request.body;
-    console.log(request.body);
-    console.log(collaborator);
     const vouchers = await connection("voucher").select("*").where({
       collaborator: collaborator,
     });

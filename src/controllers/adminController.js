@@ -13,7 +13,6 @@ module.exports = {
             passwordAdmin
         })
         .catch(function (e) {
-            console.log(e)
             if (e.code){
                 return response.status(401).json({error: 'Sorry, user or email already exists.'})
             }
@@ -54,5 +53,10 @@ module.exports = {
         else{
             return response.status(401).json({error: 'Operation not permitted.'});
         }
+    },
+    async profile (request, response){
+        const user = request.query.user;
+        const admin = await connection('usersAdmin').select('*').where({ idAdmin: user}).first();
+        return response.json(admin);
     }
 }

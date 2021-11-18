@@ -14,14 +14,16 @@ const pendencyController = require('./controllers/pendencyController')
 // Admin's APIs
 routes.post('/admin', adminController.create); //testado
 routes.get('/admin', adminController.index); //testado
-routes.post('/admin/edit', adminController.update); //testado
+routes.put('/admin', adminController.update); //testado
 routes.delete('/admin/:id', adminController.delete); //testado
+routes.get('/admin/profile', adminController.profile); //testado 
 
 // Collaborator's APIs
 routes.post('/collaborator', collaboratorsController.create); //testado
 routes.get('/collaborator', collaboratorsController.index); //testado
-routes.post('/collaborator/edit', collaboratorsController.update); //testado
+routes.put('/collaborator', collaboratorsController.update); //testado
 routes.delete('/collaborator/:id', collaboratorsController.delete); //testado
+routes.get('/collaborator/profile', collaboratorsController.profile)
 
 // Score Value's APIs
 routes.post('/score-value', scoreValueController.create); //testado
@@ -30,7 +32,7 @@ routes.get('/score-value', scoreValueController.index); //testado
 // Prize's APIs
 routes.post('/prize', prizeController.create); //testado
 routes.get('/prize', prizeController.index); //testado
-routes.post('/prize/edit', prizeController.update); //testado
+routes.put('/prize', prizeController.update); //testado
 routes.delete('/prize/:id', prizeController.delete); //testado
 
 // Voucher's APIs
@@ -46,12 +48,15 @@ routes.get('/score', scoreController.index); //testado
 // Project's APIs
 routes.post('/project', projectController.create); //testado
 routes.get('/project', projectController.index); //testado
+routes.put('/project', projectController.update); //testado
+routes.delete('/project/:id', projectController.delete); //testado
 routes.post('/project/associate', projectController.associate); //testado
 routes.get('/project/associate', projectController.association); //testado
-routes.post('/project/consultProject', projectController.consultAdminsProject); //testado
-routes.post('/project/consultAdmin', projectController.consultProjectAdmin); //testado
-routes.post('/project/edit', projectController.update); //testado
-routes.delete('/project/:id', projectController.delete); //testado
+routes.get('/project/consultProject', projectController.consultAdminsProject); //testado
+routes.get('/project/consultAdmin', projectController.consultProjectAdmin); //testado
+routes.get('/project/consultColaborator', projectController.consultProjectsColaborators); //testado
+routes.get('/project/consultColaboratorProject', projectController.consultColaboratorsProjects); //testado
+routes.get('/project/:codProject', projectController.getById); //testado
 
 // Login API
 routes.post('/session/admin', sessionController.loginAdmin); //testado
@@ -60,6 +65,7 @@ routes.post('/session/collaborator', sessionController.loginCollaborator); //tes
 // Dashboard's APIs
 routes.post('/dashboard/collaborator', consultScoreController.consultCollaboratorScore); //testado
 routes.post('/dashboard/project', consultScoreController.consultProjectScore); //testado
+routes.get('/dashboard/project', consultScoreController.totalProjectScore)
 
 // Pendency's APIs
 routes.get('/pendency/user', pendencyController.consultUserPendency); //testado

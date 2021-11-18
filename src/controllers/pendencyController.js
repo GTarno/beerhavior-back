@@ -2,6 +2,7 @@ const connection = require('../database/connection');
 
 module.exports = {
   async consultUserPendency(request, response) {
+    const project = request.query.project
     const user = await connection('score')
       .join(
         'usersCollaborator',
@@ -13,9 +14,10 @@ module.exports = {
         'score.collaborator',
         'usersCollaborator.userCollaborator',
         'usersCollaborator.nameCollaborator',
-      ])
+      ]).distinct()
       .where({
         userApproved: 0,
+        project: project
       });
     return response.json(user);
   },
@@ -26,7 +28,7 @@ module.exports = {
         collaborator: collaborator,
       })
       .update({
-        userApproved: 'S',
+        userApproved: 1,
       });
     return response.status(200).json({ Success: 'User approved' });
   },
@@ -37,13 +39,17 @@ module.exports = {
         collaborator: collaborator,
       })
       .update({
-        userApproved: 'N',
+        userApproved: 0,
       });
     return response.status(200).json({ Success: 'User not approved' });
   },
   async consultCommitPendency(request, response) {
-    const score = await connection('score').select('*').where({
+    const project = request.query.project
+    const score = await connection('score')
+    .join("usersCollaborator", "usersCollaborator.idCollaborator", "=", "score.collaborator")
+      .select(["score.totalScore", "score.commitCod", "usersCollaborator.nameCollaborator"]).where({
       commitApproved: null,
+      project: project
     });
     return response.json(score);
   },
