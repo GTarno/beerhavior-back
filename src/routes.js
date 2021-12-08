@@ -63,9 +63,15 @@ routes.post('/session/admin', sessionController.loginAdmin); //testado
 routes.post('/session/collaborator', sessionController.loginCollaborator); //testado
 
 // Dashboard's APIs
-routes.post('/dashboard/collaborator', consultScoreController.consultCollaboratorScore); //testado
-routes.post('/dashboard/project', consultScoreController.consultProjectScore); //testado
-routes.get('/dashboard/project', consultScoreController.totalProjectScore)
+routes.get('/dashboard/collaborator', consultScoreController.consultCollaboratorScore); //testado
+routes.get('/dashboard/project', consultScoreController.consultProjectScore); //testado
+routes.get('/dashboard/project/total-score', consultScoreController.totalProjectScore); //testado
+routes.get('/dashboard/project/code-score', consultScoreController.scoreForCode); //testado
+routes.get('/dashboard/project/pratices-score', consultScoreController.scoreForPratices); //testado
+routes.get('/dashboard/project/test-score', consultScoreController.scoreForTest); //testado
+routes.get('/dashboard/project/total-collaborator', consultScoreController.scoreForCollaborator); //testado
+
+
 
 // Pendency's APIs
 routes.get('/pendency/user', pendencyController.consultUserPendency); //testado
