@@ -62,5 +62,12 @@ module.exports = {
         const collaborators = await connection('usersCollaborator').select('*').where({ idCollaborator: user}).first();
         console.log(collaborators)
         return response.json(collaborators);
+    },
+    async getProfileByUser (request, response){
+        const user = request.query.user;
+        console.log(user);
+        const collaborators = await connection('usersCollaborator').select('*').where({ userCollaborator: user}).first();
+        console.log(collaborators)
+        return response.json(collaborators);
     }
 }

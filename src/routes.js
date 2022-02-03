@@ -23,7 +23,8 @@ routes.post('/collaborator', collaboratorsController.create); //testado
 routes.get('/collaborator', collaboratorsController.index); //testado
 routes.put('/collaborator', collaboratorsController.update); //testado
 routes.delete('/collaborator/:id', collaboratorsController.delete); //testado
-routes.get('/collaborator/profile', collaboratorsController.profile)
+routes.get('/collaborator/profile', collaboratorsController.profile) ; //testado
+routes.get('/collaborator/profile-user', collaboratorsController.getProfileByUser) ; //testado
 
 // Score Value's APIs
 routes.post('/score-value', scoreValueController.create); //testado
@@ -80,5 +81,6 @@ routes.post('/pendency/decline-user', pendencyController.declineUserPendency); /
 routes.get('/pendency/commit', pendencyController.consultCommitPendency); //testado
 routes.post('/pendency/approve-commit', pendencyController.approveCommitPendency); //testado
 routes.post('/pendency/decline-commit', pendencyController.declineCommitPendency); //testado
+routes.post('/pendency/remove-collaborator', pendencyController.removeUserFromProject); //testado
 
 module.exports = routes;

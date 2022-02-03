@@ -112,5 +112,21 @@ module.exports = {
       commitApproved: 'N'
     });
     return response.status(200).json({ Success: 'Commit not approved' });
+  },
+  async removeUserFromProject(request, response) {
+    const { collaborator, project } = request.body;
+    await connection('score')
+    .where({
+      collaborator: collaborator,
+      project: project
+    })
+    .update({
+      userApproved: 0
+    }).catch(function (e) {
+      if (e.code){
+          return response.status(401).json({error: 'User not found'});
+      }
+    });;
+    return response.status(200).json({ Success: 'User removed' });
   }
 };
