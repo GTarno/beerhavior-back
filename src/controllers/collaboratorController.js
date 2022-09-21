@@ -12,7 +12,12 @@ module.exports = {
             emailCollaborator,
             passwordCollaborator,
             techLeaderCollaborator
-        });
+        })        
+        .catch(function (e) {
+            if (e.code){
+                return response.status(401).json({error: 'Sorry, user or email already exists.'})
+            }
+          });
 
         return response.json({idCollaborator});
     },
@@ -37,12 +42,12 @@ module.exports = {
         return response.status(200).json({success: 'User updated'});
     },
     async delete (request, response){
-        const {idCollaborator} = request.params;
+        const {id} = request.params;
         const logged = request.headers.authorization;
-        if(idCollaborator === logged){
+        if(id == logged){
             await connection('usersCollaborator')
             .where({
-                idCollaborator: idCollaborator
+                idCollaborator: id
             })
             .delete();
             return response.status(204).send();
@@ -50,5 +55,19 @@ module.exports = {
         else{
             return response.status(401).json({error: 'Operation not permitted.'});
         }
+    },
+    async profile (request, response){
+        const user = request.query.user;
+        console.log(user);
+        const collaborators = await connection('usersCollaborator').select('*').where({ idCollaborator: user}).first();
+        console.log(collaborators)
+        return response.json(collaborators);
+    },
+    async getProfileByUser (request, response){
+        const user = request.query.user;
+        console.log(user);
+        const collaborators = await connection('usersCollaborator').select('*').where({ userCollaborator: user}).first();
+        console.log(collaborators)
+        return response.json(collaborators);
     }
 }

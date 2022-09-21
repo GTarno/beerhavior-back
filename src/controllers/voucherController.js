@@ -1,86 +1,110 @@
-const crypto = require('crypto');
-const connection = require('../database/connection');
+const crypto = require("crypto");
+const connection = require("../database/connection");
 
 module.exports = {
-    async create (request, response){
-        const {dateVoucher, availableVoucher, costVoucher, prizeQuantityVoucher, prize} = request.body;
-        const voucher = crypto.randomBytes(4).toString('HEX');
-        const collaborator = request.headers.authorization;
+  async create(request, response) {
+    const {
+      dateVoucher,
+      availableVoucher,
+      costVoucher,
+      prizeQuantityVoucher,
+      prize,
+    } = request.body;
+    const voucher = crypto.randomBytes(4).toString("HEX");
+    const collaborator = request.headers.authorization;
 
-        const selectedPrize = await connection('prizesTable')
-        .select({
-            stockPrize
-        })
+    const selectedPrize = await connection("prizesTable")
+      .select("stockPrize")
+      .where({
+        idPrize: prize,
+      })
+      .first();
+
+    const collaboratorScore = await connection("usersCollaborator")
+      .select("totalScoreCollaborator")
+      .where({
+        idCollaborator: collaborator,
+      })
+      .first();
+    if (
+      collaboratorScore.totalScoreCollaborator >= costVoucher &&
+      prizeQuantityVoucher <= selectedPrize.stockPrize
+    ) {
+      const updatePrize = selectedPrize.stockPrize - prizeQuantityVoucher;
+      await connection("prizesTable")
         .where({
-            idPrize: prize
-        });
-        
-        if (prizeQuantityVoucher <= selectedPrize){
-            const updatePrize = prize - prizeQuantityVoucher
-            await connection('prizesTable')
-            .where({
-                idPrize: prize
-            })
-            .update({
-                stockPrize: updatePrize
-            });
-            await connection('voucher').insert({
-                voucher,
-                dateVoucher,
-                availableVoucher,
-                costVoucher,
-                prizeQuantityVoucher,
-                prize,
-                collaborator
-            });
-            this.getNewScore (collaborator, costVoucher)
-            return response.json({voucher});
-    }
-        else{
-            return response.status(400).json({ error: 'Prize quantity not permitted' });
-        }
-    },
-    async index (request, response){
-        const vouchers = await connection('voucher').select('*');
-        return response.json(vouchers);
-    },
-    async getNewScore (user, score){
-        const totalScore = await connection('usersCollaborator')
-        .select('totalScoreCollaborator')
-        .where({
-            userCollaborator: user
-        });
-        const newScore = totalScore - score;
-        this.updateScore(newScore, user);
-    },
-    async updateScore (score, user) {
-        await connection('usersCollaborator')
-        .where({
-            userCollaborator: user
+          idPrize: prize,
         })
         .update({
-            totalScoreCollaborator: score
-        })
-    },
-    async useVoucher (request, response){
-        const {voucher} = request.body;
-        const voucherAvailability = await connection('voucher')
-        .select('availableVoucher')
-        .where({
-            voucher: voucher
+          stockPrize: updatePrize,
         });
-        if (voucherAvailability === 0) {
-            return response.status(400).json({ error: 'Voucher unavailable' });
-        }
-        else{
-        await connection('voucher')
+      await connection("voucher").insert({
+        voucher,
+        dateVoucher,
+        availableVoucher,
+        costVoucher,
+        prizeQuantityVoucher,
+        prize,
+        collaborator,
+      });
+      const totalScore = await connection("usersCollaborator")
+        .select("totalScoreCollaborator")
         .where({
-            voucher: voucher
+          idCollaborator: collaborator,
+        })
+        .first();
+      const newScore = totalScore.totalScoreCollaborator - costVoucher;
+      await connection("usersCollaborator")
+        .where({
+          idCollaborator: collaborator,
         })
         .update({
-            availableVoucher: 0
+          totalScoreCollaborator: newScore,
         });
-        return response.status(201).send();
-     }
+
+      return response.json({ voucher });
+    } else {
+      return response
+        .status(400)
+        .json({ error: "Prize quantity not permitted" });
     }
-}
+  },
+  async index(request, response) {
+    const vouchers = await connection("voucher").select("*");
+    return response.json(vouchers);
+  },
+
+  async getVoucherByUser(request, response) {
+    const {collaborator} = request.body;
+    const vouchers = await connection("voucher").select("*").where({
+      collaborator: collaborator,
+    });
+    if (vouchers.length > 0) {
+      return response.json(vouchers);
+    } else {
+      return response.status(400).json({ error: "Voucher not found" });
+    }
+  },
+
+  async useVoucher(request, response) {
+    const { voucher } = request.body;
+    const voucherAvailability = await connection("voucher")
+      .select("availableVoucher")
+      .where({
+        voucher: voucher,
+      })
+      .first();
+    if (voucherAvailability.availableVoucher == 0) {
+      return response.status(400).json({ error: "Voucher unavailable" });
+    } else {
+      await connection("voucher")
+        .where({
+          voucher: voucher,
+        })
+        .update({
+          availableVoucher: 0,
+        });
+      return response.status(201).send();
+    }
+  },
+};

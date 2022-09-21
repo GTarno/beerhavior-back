@@ -11,7 +11,12 @@ module.exports = {
             nameAdmin,
             emailAdmin,
             passwordAdmin
-        });
+        })
+        .catch(function (e) {
+            if (e.code){
+                return response.status(401).json({error: 'Sorry, user or email already exists.'})
+            }
+          });
 
         return response.json({idAdmin});
     },
@@ -35,12 +40,12 @@ module.exports = {
         return response.status(200).json({success: 'User updated'});
     },
     async delete (request, response){
-        const {idAdmin} = request.params;
+        const {id} = request.params;
         const logged = request.headers.authorization;
-        if(idAdmin === logged){
+        if(id == logged){
             await connection('usersAdmin')
             .where({
-                idAdmin:idAdmin
+                idAdmin:id
             })
             .delete();
             return response.status(204).send();
@@ -48,5 +53,10 @@ module.exports = {
         else{
             return response.status(401).json({error: 'Operation not permitted.'});
         }
+    },
+    async profile (request, response){
+        const user = request.query.user;
+        const admin = await connection('usersAdmin').select('*').where({ idAdmin: user}).first();
+        return response.json(admin);
     }
 }
